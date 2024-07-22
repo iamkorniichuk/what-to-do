@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    volumes:
+      - web-static:/usr/src/app/static
+      - web-media:/usr/src/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  db:
+    image: postgres:16
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: "pg_isready"
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - web-static:/usr/src/app/static
+      - web-media:/usr/src/app/media
+    depends_on:
+      - web
+
+volumes:
+  web-static:
+  web-media:
+  db-data:
