@@ -13,6 +13,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
 AUTH_USER_MODEL = "users.User"
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -25,4 +30,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
-REST_USE_JWT = True
+REST_AUTH = {
+    "REGISTER_SERIALIZER": "users.serializers.RegisterSerializer",
+}

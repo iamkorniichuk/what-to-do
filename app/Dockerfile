@@ -1,11 +1,9 @@
 FROM python:3.12-bookworm AS build
 
-ARG APP_DIR
-
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR $APP_DIR
+WORKDIR /var/www/app
 COPY . .
 
 RUN pip install --upgrade pip

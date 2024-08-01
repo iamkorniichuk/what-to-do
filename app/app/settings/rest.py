@@ -2,9 +2,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "users.permissions.IsEmailVerified",
     ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "users.authentication.BearerAuthentication",
+    ],
 }
-
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]

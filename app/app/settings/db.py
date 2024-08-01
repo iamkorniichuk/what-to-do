@@ -9,6 +9,6 @@ with env.prefixed("POSTGRES_"):
             "USER": env.str("USER"),
             "PASSWORD": env.str("PASSWORD"),
             "HOST": env.str("HOST"),
-            "PORT": env.str("PORT"),
+            "PORT": "5432",
         }
     }

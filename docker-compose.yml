@@ -3,13 +3,11 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-      args:
-        APP_DIR: ${APP_DIR}
     env_file:
       - .env
     volumes:
-      - web-static:${STATIC_DIR}
-      - web-media:${MEDIA_DIR}
+      - web-static:/var/www/static
+      - web-media:/var/www/media
     depends_on:
       db:
         condition: service_healthy
@@ -20,6 +18,9 @@ services:
       - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
+    environment:
+      - POSRGRES_PORT=5432
+      - POSTGRES_HOTS_AUTH_METHOD=trust
     env_file:
       - .env
     healthcheck:
@@ -35,8 +36,8 @@ services:
     ports:
       - 80:80
     volumes:
-      - web-static:${STATIC_DIR}:ro
-      - web-media:${MEDIA_DIR}
+      - web-static:/var/www/static:ro
+      - web-media:/var/www/media
     depends_on:
       - web
 
