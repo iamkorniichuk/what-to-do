@@ -31,5 +31,5 @@ ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 REST_AUTH = {
-    "REGISTER_SERIALIZER": "users.serializers.RegisterSerializer",
+    "REGISTER_SERIALIZER": "authentication.serializers.RegisterSerializer",
 }
