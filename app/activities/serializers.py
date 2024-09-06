@@ -10,4 +10,14 @@ class ActivitySerializer(serializers.ModelSerializer):
             "name",
             "description",
             "user",
+            "interaction",
         )
+
+    interaction = serializers.SerializerMethodField()
+
+    def get_interaction(self, activity):
+        current_user = self.context["current_user"]
+        interaction = activity.interactions.filter(user=current_user).first()
+        if interaction:
+            return interaction.get_type_display()
+        return None
