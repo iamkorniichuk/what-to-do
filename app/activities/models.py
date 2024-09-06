@@ -13,3 +13,18 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InteractionTypes(models.IntegerChoices):
+    LIKE = 0, ""
+    DISLIKE = 1, ""
+    WATCH_LATER = 2, ""
+
+
+class Interaction(models.Model):
+    activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
+    user = models.ForeignKey(User, models.CASCADE, related_name="interactions")
+    type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
+
+    def __str__(self):
+        return f"{self.get_type_display()}: {self.user}-{self.activity}"
