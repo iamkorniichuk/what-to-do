@@ -1,5 +1,9 @@
 from rest_framework.permissions import BasePermission
-from allauth.account.utils import has_verified_email
+
+
+def has_verified_email(user):
+    is_verified = user.email
+    return is_verified
 
 
 class IsEmailVerified(BasePermission):
