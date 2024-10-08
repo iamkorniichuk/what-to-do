@@ -1,9 +1,7 @@
 Django==5.1
 djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
-django-allauth==0.63.6
 django-cors-headers==4.4.0
-dj-rest-auth==6.0.0
 drf-around==0.0.3.1
 environs==11.0.0
 gunicorn==22.0.0
