@@ -1,6 +1,6 @@
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "authentication.permissions.IsEmailVerified",
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "authentication.authentication.BearerAuthentication",
