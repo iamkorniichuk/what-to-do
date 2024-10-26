@@ -17,12 +17,12 @@ class AuthenticationTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.existing_user_credentials = {
-            "email": "user1@test.com",
+            "username": "user1",
             "password": "insecure-password-123",
         }
         cls.existing_user = User.objects.create_user(**cls.existing_user_credentials)
         cls.new_user_credentials = {
-            "email": "user2@test.com",
+            "username": "user2",
             "password": "insecure-password-123",
         }
 
@@ -36,7 +36,7 @@ class AuthenticationTestCase(APITestCase):
         _, token = get_tokens(response)
         return validate_access_token(token)
 
-    def test_sign_up(self):
+    def test_valid_sign_up(self):
         response = self.client.post(
             SIGN_UP_URL,
             self.new_user_credentials,
@@ -48,12 +48,20 @@ class AuthenticationTestCase(APITestCase):
         )
 
         is_user_created = User.objects.filter(
-            email=self.new_user_credentials["email"]
+            username=self.new_user_credentials["username"]
         ).exists()
 
         assert is_user_created
 
-    def test_login(self):
+    def test_invalid_sign_up(self):
+        response = self.client.post(
+            SIGN_UP_URL,
+            self.existing_user_credentials,
+            "json",
+        )
+        assert response.status_code == 400
+
+    def test_valid_login(self):
         response = self.client.post(
             LOGIN_URL,
             self.existing_user_credentials,
@@ -64,7 +72,7 @@ class AuthenticationTestCase(APITestCase):
             response
         )
 
-    def test_login_refresh(self):
+    def test_valid_login_refresh(self):
         response = self.client.post(
             LOGIN_URL,
             self.existing_user_credentials,
