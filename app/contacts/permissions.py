@@ -1,9 +1,17 @@
 from rest_framework.permissions import BasePermission
 
 
+def has_verified_contact(user, related_name):
+    has_contact = hasattr(user, related_name)
+    if not has_contact:
+        return False
+
+    contact = getattr(user, related_name)
+    return contact.is_verified
+
+
 def has_verified_email(user):
-    is_verified = user.email
-    return is_verified
+    return has_verified_contact(user, "email")
 
 
 class IsEmailVerified(BasePermission):

@@ -41,19 +41,23 @@ class LoginSerializer(TokenObtainSerializer):
         return credentials
 
 
-class SignUpSerializer(LoginSerializer, serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer, LoginSerializer):
     class Meta:
         model = User
-        fields = ["email", "password"]
+        fields = ["username", "password"]
         extra_kwargs = {
-            "email": {"write_only": True},
+            "username": {"write_only": True},
             "password": {"write_only": True},
         }
 
+    def __init__(self, *args, **kwargs):
+        serializers.ModelSerializer.__init__(self, *args, **kwargs)
+
     def validate(self, data):
-        return super(serializers.ModelSerializer, self).validate(data)
+        validated_data = serializers.ModelSerializer.validate(self, data)
+        return validated_data
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        super(LoginSerializer, self).validate(validated_data)
+        LoginSerializer.validate(self, validated_data)
         return user
