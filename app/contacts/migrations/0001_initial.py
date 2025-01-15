@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,14 +14,25 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Email',
+            name="Email",
             fields=[
-                ('is_verified', models.BooleanField(default=False)),
-                ('email', models.EmailField(max_length=254, primary_key=True, serialize=False)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("is_verified", models.BooleanField(default=False)),
+                (
+                    "email",
+                    models.EmailField(
+                        max_length=254, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'default_related_name': 'email',
+                "default_related_name": "email",
             },
         ),
     ]
