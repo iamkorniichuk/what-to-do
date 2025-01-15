@@ -7,11 +7,13 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = (
+            "pk",
             "name",
             "description",
             "user",
             "interaction",
         )
+        read_only_fields = ("pk",)
 
     interaction = serializers.SerializerMethodField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

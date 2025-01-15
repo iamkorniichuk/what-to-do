@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
 
 from .models import Activity, InteractionTypes, Interaction
 from .serializers import ActivitySerializer
@@ -20,26 +21,27 @@ class ActivityViewSet(ModelViewSet):
 
     @action(methods=["post"], detail=True)
     def like(self, request, pk=None):
-        return self.create_interaction(InteractionTypes.LIKE)
+        return self.set_interaction(InteractionTypes.LIKE)
 
     @action(methods=["post"], detail=True)
     def dislike(self, request, pk=None):
-        return self.create_interaction(InteractionTypes.DISLIKE)
+        return self.set_interaction(InteractionTypes.DISLIKE)
 
     @action(methods=["post"], detail=True)
     def watch_later(self, request, pk=None):
-        return self.create_interaction(InteractionTypes.WATCH_LATER)
+        return self.set_interaction(InteractionTypes.WATCH_LATER)
 
-    def create_interaction(self, type):
-        activity = self.get_object()
-        user = self.request.user
-        Interaction.objects.create(
-            activity=activity,
-            user=user,
-            type=type,
+    def set_interaction(self, interaction_type):
+        current_activity = self.get_object()
+        current_user = self.request.user
+
+        Interaction.objects.update_or_create(
+            activity=current_activity,
+            user=current_user,
+            defaults={"type": interaction_type},
         )
-        serializer = self.get_serializer(activity)
-        return Response(serializer.data)
+        serializer = self.get_serializer(current_activity)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         current_user = self.request.user

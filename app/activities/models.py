@@ -16,12 +16,17 @@ class Activity(models.Model):
 
 
 class InteractionTypes(models.IntegerChoices):
-    LIKE = 0, ""
-    DISLIKE = 1, ""
-    WATCH_LATER = 2, ""
+    LIKE = 0, "Like"
+    DISLIKE = 1, "Dislike"
+    WATCH_LATER = 2, "Watch Later"
 
 
 class Interaction(models.Model):
+    class Meta:
+        unique_together = [
+            ("activity", "user"),
+        ]
+
     activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
     user = models.ForeignKey(User, models.CASCADE, related_name="interactions")
     type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
