@@ -3,16 +3,20 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from drf_around.permissions import IsRelatedToUserOrReadOnly
-from drf_around.mixins import OverrideDataMixin
-
 from .models import Activity, InteractionTypes, Interaction
 from .serializers import ActivitySerializer
+from .permissions import IsRelatedToUserOrReadOnly
 
 
-class ActivityViewSet(OverrideDataMixin, ModelViewSet):
+class ActivityViewSet(ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        if self.action == "update":
+            permissions += [IsRelatedToUserOrReadOnly("user")]
+        return permissions
 
     @action(methods=["post"], detail=True)
     def like(self, request, pk=None):
@@ -37,22 +41,8 @@ class ActivityViewSet(OverrideDataMixin, ModelViewSet):
         serializer = self.get_serializer(activity)
         return Response(serializer.data)
 
-    def get_overriding_data(self):
-        current_user = self.request.user
-        data = {"user": current_user.pk}
-        return data
-
     def get_queryset(self):
         current_user = self.request.user
         available_filter = Q(user=current_user) | Q(is_published=True)
         queryset = Activity.objects.filter(available_filter)
         return queryset
-
-    def get_permissions(self):
-        permissions = super().get_permissions() + [IsRelatedToUserOrReadOnly("user")]
-        return permissions
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"current_user": self.request.user})
-        return context
