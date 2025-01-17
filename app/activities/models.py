@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from .validators import ContentTypeValidator, FileSizeValidator
+
 
 User = get_user_model()
 
@@ -20,7 +22,20 @@ class ActivityMedia(models.Model):
         ordering = ["order"]
 
     activity = models.ForeignKey(Activity, models.CASCADE, related_name="media")
-    file = models.FileField(upload_to="activities/")
+    file = models.FileField(
+        upload_to="activities/",
+        validators=[
+            FileSizeValidator(30 * 1024 * 1024),
+            ContentTypeValidator(
+                "image/heic",
+                "image/heif",
+                "image/jpeg",
+                "image/png",
+                "video/mp4",
+                "video/webm",
+            ),
+        ],
+    )
     order = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 

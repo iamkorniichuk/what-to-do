@@ -41,14 +41,17 @@ class ActivitySerializer(serializers.ModelSerializer):
             return interaction.get_type_display()
         return None
 
-    def validate_files(self, value):
-        max_length = 10
+    def validate_files(self, files):
+        for file in files:
+            serializer = ActivityMediaSerializer(data={"file": file})
+            serializer.is_valid(raise_exception=True)
 
-        if len(value) > max_length:
+        max_length = 10
+        if len(files) > max_length:
             raise serializers.ValidationError(
                 f"You can upload up to {max_length} media files only."
             )
-        return value
+        return files
 
     def create(self, validated_data):
         files = validated_data.pop("files")
