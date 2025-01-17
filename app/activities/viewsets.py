@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, parsers
 
 from .models import Activity, InteractionTypes, Interaction
 from .serializers import ActivitySerializer
@@ -10,8 +10,9 @@ from .permissions import IsRelatedToUserOrReadOnly
 
 
 class ActivityViewSet(ModelViewSet):
-    queryset = Activity.objects.all()
+    queryset = Activity.objects.prefetch_related("media").all()
     serializer_class = ActivitySerializer
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def get_permissions(self):
         permissions = super().get_permissions()

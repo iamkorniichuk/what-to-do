@@ -15,6 +15,19 @@ class Activity(models.Model):
         return self.name
 
 
+class ActivityMedia(models.Model):
+    class Meta:
+        ordering = ["order"]
+
+    activity = models.ForeignKey(Activity, models.CASCADE, related_name="media")
+    file = models.FileField(upload_to="activities/")
+    order = models.PositiveSmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.activity} -> {self.order}"
+
+
 class InteractionTypes(models.IntegerChoices):
     LIKE = 0, "Like"
     DISLIKE = 1, "Dislike"
@@ -32,4 +45,4 @@ class Interaction(models.Model):
     type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
 
     def __str__(self):
-        return f"{self.get_type_display()}: {self.user}-{self.activity}"
+        return f"{self.get_type_display()}: {self.user} -> {self.activity}"

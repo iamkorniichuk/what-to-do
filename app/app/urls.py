@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -21,4 +23,4 @@ urlpatterns = [
     ),
     path("auth/", include("authentication.urls")),
     path("activities/", include("activities.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

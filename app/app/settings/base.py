@@ -34,9 +34,9 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-STATIC_ROOT = "/var/www/static"
+STATIC_ROOT = env.str("STATIC_PATH")
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = "/var/www/media"
+MEDIA_ROOT = env.str("MEDIA_PATH")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
