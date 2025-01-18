@@ -23,7 +23,6 @@ class ActivitySerializer(serializers.ModelSerializer):
             "name",
             "description",
             "user",
-            "interaction",
             "media",
             "files",
         )
@@ -32,14 +31,6 @@ class ActivitySerializer(serializers.ModelSerializer):
     media = ActivityMediaSerializer(many=True, read_only=True)
     files = serializers.ListField(child=serializers.FileField(), write_only=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    interaction = serializers.SerializerMethodField()
-
-    def get_interaction(self, activity) -> str:
-        current_user = self.context["request"].user
-        interaction = activity.interactions.filter(user=current_user).first()
-        if interaction:
-            return interaction.get_type_display()
-        return None
 
     def validate_files(self, files):
         for file in files:

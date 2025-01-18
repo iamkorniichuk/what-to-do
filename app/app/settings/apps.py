@@ -16,6 +16,7 @@ PROJECT_APPS = [
     "users",
     "authentication",
     "activities",
+    "interactions",
     "contacts",
 ]
 

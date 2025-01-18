@@ -23,4 +23,5 @@ urlpatterns = [
     ),
     path("auth/", include("authentication.urls")),
     path("activities/", include("activities.urls")),
+    path("interactions/", include("interactions.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

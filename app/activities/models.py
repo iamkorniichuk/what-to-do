@@ -41,23 +41,3 @@ class ActivityMedia(models.Model):
 
     def __str__(self):
         return f"{self.activity} -> {self.order}"
-
-
-class InteractionTypes(models.IntegerChoices):
-    LIKE = 0, "Like"
-    DISLIKE = 1, "Dislike"
-    WATCH_LATER = 2, "Watch Later"
-
-
-class Interaction(models.Model):
-    class Meta:
-        unique_together = [
-            ("activity", "user"),
-        ]
-
-    activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
-    user = models.ForeignKey(User, models.CASCADE, related_name="interactions")
-    type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
-
-    def __str__(self):
-        return f"{self.get_type_display()}: {self.user} -> {self.activity}"
