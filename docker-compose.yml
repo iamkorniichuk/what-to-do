@@ -19,10 +19,11 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSRGRES_PORT=5432
-      - POSTGRES_HOTS_AUTH_METHOD=trust
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST_AUTH_METHOD=trust
     env_file:
       - .env
+    user: postgres
     healthcheck:
       test: "pg_isready"
       interval: 5s
@@ -34,7 +35,7 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - web-static:/var/www/static:ro
       - web-media:/var/www/media
