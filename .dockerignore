@@ -4,6 +4,8 @@ _pycache__/
 
 .pre-commit-config.yaml
 dev_requirements.txt
+.env.example
+README.md
 
 .git
 .gitignore
