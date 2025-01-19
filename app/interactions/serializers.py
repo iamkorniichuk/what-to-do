@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from activities.models import Activity
 from activities.serializers import ActivitySerializer
+from users.serializers import UserSerializer
 
 from .models import Interaction
 
@@ -27,14 +28,26 @@ class ChoiceDisplayField(serializers.ChoiceField):
 class InteractionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interaction
-        fields = ("pk", "activity", "activity_pk", "user", "type", "created_at")
-        read_only_fields = ("pk", "created_at")
+        fields = (
+            "pk",
+            "activity",
+            "activity_pk",
+            "user",
+            "user_pk",
+            "type",
+            "created_at",
+        )
+        read_only_fields = ("pk", "created_at", "user")
 
     serializer_choice_field = ChoiceDisplayField
 
+    activity = ActivitySerializer(read_only=True, required=False)
     activity_pk = serializers.PrimaryKeyRelatedField(
         queryset=Activity.objects.all(),
         source="activity",
     )
-    activity = ActivitySerializer(read_only=True, required=False)
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer(read_only=True, required=False)
+    user_pk = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+        source="user",
+    )

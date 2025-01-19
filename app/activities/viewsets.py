@@ -13,9 +13,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def get_permissions(self):
-        permissions = super().get_permissions()
-        if self.action == "update":
-            permissions += [IsRelatedToUserOrReadOnly("user")]
+        permissions = super().get_permissions() + [IsRelatedToUserOrReadOnly("user")]
         return permissions
 
     def get_queryset(self):

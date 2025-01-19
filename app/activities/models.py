@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from .validators import ContentTypeValidator, FileSizeValidator
+from commons.validators import ContentTypeValidator, FileSizeValidator
 
 
 User = get_user_model()

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from users.serializers import UserSerializer
+
 from .models import Activity, ActivityMedia
 
 
@@ -23,14 +25,19 @@ class ActivitySerializer(serializers.ModelSerializer):
             "name",
             "description",
             "user",
+            "user_pk",
             "media",
             "files",
         )
-        read_only_fields = ("pk",)
+        read_only_fields = ("pk", "user")
 
     media = ActivityMediaSerializer(many=True, read_only=True)
     files = serializers.ListField(child=serializers.FileField(), write_only=True)
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer(read_only=True, required=False)
+    user_pk = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+        source="user",
+    )
 
     def validate_files(self, files):
         for file in files:

@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
+from commons.validators import ContentTypeValidator, FileSizeValidator
+
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password, **extra_fields):
@@ -22,6 +24,21 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=32, db_index=True, unique=True)
+    image = models.FileField(
+        upload_to="users/",
+        blank=True,
+        null=True,
+        validators=[
+            FileSizeValidator(15 * 1024 * 1024),
+            ContentTypeValidator(
+                "image/heic",
+                "image/heif",
+                "image/jpeg",
+                "image/png",
+            ),
+        ],
+    )
+    description = models.TextField(blank=True, default="")
     last_login = None
 
     USERNAME_FIELD = "username"
