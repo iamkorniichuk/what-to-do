@@ -6,7 +6,7 @@ from commons.validators import ContentTypeValidator, FileSizeValidator
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password, **extra_fields):
+    def create(self, username, password, **extra_fields):
         user = self.model(
             username=username.lower(),
             **extra_fields,
@@ -15,11 +15,12 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+    def create_user(self, username, password, **extra_fields):
+        return self.create(username, password, **extra_fields)
+
     def create_superuser(self, username, password, **extra_fields):
-        user = self.create_user(username, password, **extra_fields)
-        user.is_superuser = True
-        user.save()
-        return user
+        extra_fields["is_superuser"] = True
+        return self.create_user(username, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

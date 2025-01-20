@@ -50,14 +50,3 @@ class ActivitySerializer(serializers.ModelSerializer):
                 f"You can upload up to {max_length} media files only."
             )
         return files
-
-    def create(self, validated_data):
-        files = validated_data.pop("files")
-        activity = Activity.objects.create(**validated_data)
-        for order, file in enumerate(files):
-            ActivityMedia.objects.create(
-                activity=activity,
-                order=order,
-                file=file,
-            )
-        return activity

@@ -1,40 +1,22 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenBlacklistView,
-)
 
-from .serializers import SignUpSerializer, LoginSerializer, LoginRefreshSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .serializers import SignUpSerializer
 
 
 User = get_user_model()
 
 
-class SignUpView(CreateAPIView):
-    serializer_class = SignUpSerializer
+class SignUpView(CreateAPIView, TokenObtainPairView):
     queryset = User.objects.all()
-    permission_classes = [AllowAny]
-
-
-class LoginView(TokenObtainPairView):
-    serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
+    permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        self.serializer_class = SignUpSerializer
+        super(CreateAPIView, self).create(request, *args, **kwargs)
 
-
-class LoginRefreshView(TokenRefreshView):
-    serializer_class = LoginRefreshSerializer
-    permission_classes = [AllowAny]
-
-
-class LogoutView(TokenBlacklistView):
-    permission_classes = [AllowAny]
+        self.serializer_class = TokenObtainPairSerializer
+        return super(TokenObtainPairView, self).post(request, *args, **kwargs)
