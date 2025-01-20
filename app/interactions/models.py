@@ -17,12 +17,12 @@ class Interaction(models.Model):
     class Meta:
         ordering = ["created_at"]
         unique_together = [
-            ("activity", "user"),
+            ("activity", "created_by"),
         ]
 
-    activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
-    user = models.ForeignKey(User, models.CASCADE, related_name="interactions")
     type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
+    activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
+    created_by = models.ForeignKey(User, models.CASCADE, related_name="interactions")
     created_at = models.DateTimeField(blank=True, editable=False)
 
     def save(self, *args, **kwargs):
@@ -30,4 +30,4 @@ class Interaction(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.get_type_display()}: {self.user} -> {self.activity}"
+        return f"{self.get_type_display()}: {self.created_by} -> {self.activity}"

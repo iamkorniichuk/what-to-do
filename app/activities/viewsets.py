@@ -13,11 +13,13 @@ class ActivityViewSet(viewsets.ModelViewSet):
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     def get_permissions(self):
-        permissions = super().get_permissions() + [IsRelatedToUserOrReadOnly("user")]
+        permissions = super().get_permissions() + [
+            IsRelatedToUserOrReadOnly("created_by")
+        ]
         return permissions
 
     def get_queryset(self):
         current_user = self.request.user
-        is_visible = Q(user=current_user) | Q(is_published=True)
+        is_visible = Q(created_by=current_user) | Q(is_published=True)
         queryset = Activity.objects.filter(is_visible)
         return queryset

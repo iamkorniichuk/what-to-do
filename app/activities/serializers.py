@@ -24,19 +24,19 @@ class ActivitySerializer(serializers.ModelSerializer):
             "pk",
             "name",
             "description",
-            "user",
-            "user_pk",
+            "created_by",
+            "created_by_pk",
             "media",
             "files",
         )
-        read_only_fields = ("pk", "user")
+        read_only_fields = ("pk", "created_by")
 
     media = ActivityMediaSerializer(many=True, read_only=True)
     files = serializers.ListField(child=serializers.FileField(), write_only=True)
-    user = UserSerializer(read_only=True, required=False)
-    user_pk = serializers.HiddenField(
+    created_by = UserSerializer(read_only=True, required=False)
+    created_by_pk = serializers.HiddenField(
         default=serializers.CurrentUserDefault(),
-        source="user",
+        source="created_by",
     )
 
     def validate_files(self, files):

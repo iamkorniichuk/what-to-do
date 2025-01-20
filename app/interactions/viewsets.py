@@ -10,14 +10,14 @@ class InteractionViewSet(viewsets.ModelViewSet):
     serializer_class = InteractionSerializer
 
     def get_permissions(self):
-        permissions = super().get_permissions() + [IsRelatedToUser("user")]
+        permissions = super().get_permissions() + [IsRelatedToUser("created_by")]
         return permissions
 
     def get_queryset(self):
         current_user = self.request.user
         queryset = (
             Interaction.objects.prefetch_related("activity")
-            .filter(user=current_user)
+            .filter(created_by=current_user)
             .all()
         )
         return queryset

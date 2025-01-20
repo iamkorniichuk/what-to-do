@@ -23,6 +23,6 @@ def validate_access_token(token):
 
 
 def get_tokens(response) -> Tuple[RefreshToken, AccessToken]:
-    refresh = response.data.get("refresh_token")
-    access = response.data.get("access_token")
+    refresh = response.data.get("refresh")
+    access = response.data.get("access")
     return refresh, access

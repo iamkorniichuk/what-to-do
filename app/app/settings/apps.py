@@ -13,11 +13,11 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
 ]
 PROJECT_APPS = [
-    "users",
-    "authentication",
     "activities",
+    "authentication",
     "interactions",
     "contacts",
+    "users",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS

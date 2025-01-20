@@ -12,28 +12,18 @@ User = get_user_model()
 
 
 class LoginRefreshSerializer(TokenRefreshSerializer):
-    refresh_token = TokenRefreshSerializer._declared_fields["refresh"]
-    access_token = TokenRefreshSerializer._declared_fields["access"]
-
-    refresh = None
-    access = None
-
-    def validate(self, attrs):
-        tokens = {"refresh": attrs["refresh_token"]}
-        valid_tokens = super().validate(tokens)
-        data = {"access_token": valid_tokens["access"]}
-        return data
+    pass
 
 
 class LoginSerializer(TokenObtainSerializer):
-    efault_error_messages = {"no_active_account": "Invalid credentials provided"}
+    default_error_messages = {"no_active_account": "Invalid credentials provided"}
     token_class = RefreshToken
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         token = self.get_token(self.user)
-        data["refresh_token"] = str(token)
-        data["access_token"] = str(token.access_token)
+        data["refresh"] = str(token)
+        data["access"] = str(token.access_token)
         return data
 
     def validate(self, credentials):

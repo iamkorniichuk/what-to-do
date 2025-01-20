@@ -21,8 +21,8 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger",
     ),
-    path("auth/", include("authentication.urls")),
     path("activities/", include("activities.urls")),
+    path("auth/", include("authentication.urls")),
     path("interactions/", include("interactions.urls")),
     path("users/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

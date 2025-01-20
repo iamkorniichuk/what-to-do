@@ -32,12 +32,12 @@ class InteractionSerializer(serializers.ModelSerializer):
             "pk",
             "activity",
             "activity_pk",
-            "user",
-            "user_pk",
+            "created_by",
+            "created_by_pk",
             "type",
             "created_at",
         )
-        read_only_fields = ("pk", "created_at", "user")
+        read_only_fields = ("pk", "created_at", "created_by")
 
     serializer_choice_field = ChoiceDisplayField
 
@@ -46,8 +46,8 @@ class InteractionSerializer(serializers.ModelSerializer):
         queryset=Activity.objects.all(),
         source="activity",
     )
-    user = UserSerializer(read_only=True, required=False)
-    user_pk = serializers.HiddenField(
+    created_by = UserSerializer(read_only=True, required=False)
+    created_by_pk = serializers.HiddenField(
         default=serializers.CurrentUserDefault(),
-        source="user",
+        source="created_by",
     )
