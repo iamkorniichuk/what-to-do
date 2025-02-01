@@ -16,7 +16,7 @@ class UserViewSet(
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
 
     @action(methods=["get", "put", "patch"], detail=False)
-    def me(self, request):
+    def my(self, request):
         current_user = self.request.user
         self.kwargs["pk"] = current_user.pk
 
