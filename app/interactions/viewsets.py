@@ -6,7 +6,7 @@ from .models import Interaction
 from .serializers import InteractionSerializer
 
 
-class InteractionViewSet(viewsets.ModelViewSet):
+class InteractionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = InteractionSerializer
 
     def get_permissions(self):

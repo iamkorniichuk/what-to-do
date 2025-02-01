@@ -8,11 +8,6 @@ from activities.models import Activity
 User = get_user_model()
 
 
-class InteractionTypes(models.IntegerChoices):
-    LIKE = 0, "like"
-    DISLIKE = 1, "dislike"
-
-
 class Interaction(models.Model):
     class Meta:
         ordering = ["created_at"]
@@ -20,7 +15,11 @@ class Interaction(models.Model):
             ("activity", "created_by"),
         ]
 
-    type = models.PositiveSmallIntegerField(choices=InteractionTypes.choices)
+    class TypeChoices(models.IntegerChoices):
+        LIKE = 0, "like"
+        DISLIKE = 1, "dislike"
+
+    type = models.PositiveSmallIntegerField(choices=TypeChoices.choices)
     activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
     created_by = models.ForeignKey(User, models.CASCADE, related_name="interactions")
     created_at = models.DateTimeField(blank=True, editable=False)
