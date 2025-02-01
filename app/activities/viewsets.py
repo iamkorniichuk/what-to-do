@@ -1,4 +1,3 @@
-from django.db.models import Q
 from rest_framework import viewsets, parsers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -24,27 +23,33 @@ class ActivityViewSet(viewsets.ModelViewSet):
         return permissions
 
     def get_queryset(self):
-        current_user = self.request.user
-        is_visible = Q(created_by=current_user) | Q(is_published=True)
-        queryset = Activity.objects.filter(is_visible)
+        queryset = Activity.objects.filter(is_published=True)
         return queryset
+
+    @action(["get"], detail=False)
+    def my(self, request):
+        current_user = request.user
+
+        queryset = Activity.objects.filter(created_by=current_user).all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(["post"], detail=True)
     def like(self, request, pk=None):
         interaction_type = Interaction.TypeChoices.LIKE
-        return self.request_set_interaction(interaction_type)
+        return self.request_set_interaction(request, interaction_type)
 
     @action(["post"], detail=True)
     def dislike(self, request, pk=None):
         interaction_type = Interaction.TypeChoices.DISLIKE
-        return self.request_set_interaction(interaction_type)
+        return self.request_set_interaction(request, interaction_type)
 
-    def request_set_interaction(self, interaction_type):
-        user = self.request.user
+    def request_set_interaction(self, request, interaction_type):
+        current_user = request.user
         activity = self.get_object()
 
         obj, _ = Interaction.objects.update_or_create(
-            created_by=user,
+            created_by=current_user,
             activity=activity,
             defaults={"type": interaction_type},
         )

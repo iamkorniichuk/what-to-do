@@ -1,9 +1,15 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from commons.permissions import IsRelatedToUser
 
-from .models import TicketType
-from .serializers import CreateTicketSerializer, UpdateTicketSerializer
+from .models import TicketType, Ticket
+from .serializers import (
+    CreateTicketSerializer,
+    UpdateTicketSerializer,
+    TicketSerializer,
+)
 
 
 class TicketViewSet(
@@ -24,3 +30,11 @@ class TicketViewSet(
             return CreateTicketSerializer
         if self.action in ["update", "partial_update"]:
             return UpdateTicketSerializer
+
+    @action(["get"], detail=False)
+    def my(self, request):
+        current_user = request.user
+        queryset = Ticket.objects.filter(booked_by=current_user).all()
+
+        serializer = TicketSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

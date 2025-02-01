@@ -17,7 +17,7 @@ class UserViewSet(
 
     @action(methods=["get", "put", "patch"], detail=False)
     def my(self, request):
-        current_user = self.request.user
+        current_user = request.user
         self.kwargs["pk"] = current_user.pk
 
         if request.method == "GET":
