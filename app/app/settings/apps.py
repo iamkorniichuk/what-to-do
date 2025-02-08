@@ -17,6 +17,7 @@ PROJECT_APPS = [
     "authentication",
     "interactions",
     "contacts",
+    "ticket_types",
     "tickets",
     "users",
 ]

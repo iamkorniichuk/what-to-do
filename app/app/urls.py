@@ -26,4 +26,5 @@ urlpatterns = [
     path("interactions/", include("interactions.urls")),
     path("users/", include("users.urls")),
     path("tickets/", include("tickets.urls")),
+    path("ticket_types/", include("ticket_types.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
