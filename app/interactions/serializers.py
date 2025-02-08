@@ -37,16 +37,22 @@ class InteractionSerializer(serializers.ModelSerializer):
             "type",
             "created_at",
         )
-        read_only_fields = ("pk", "created_at", "created_by")
+        read_only_fields = ("pk", "activity", "created_by", "created_at")
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Interaction.objects.all(),
+                fields=["activity", "created_by_pk"],
+            )
+        ]
 
     serializer_choice_field = ChoiceDisplayField
 
-    activity = ActivitySerializer(read_only=True, required=False)
+    activity = ActivitySerializer(required=False)
     activity_pk = serializers.PrimaryKeyRelatedField(
         queryset=Activity.objects.all(),
         source="activity",
     )
-    created_by = UserSerializer(read_only=True, required=False)
+    created_by = UserSerializer(required=False)
     created_by_pk = serializers.HiddenField(
         default=serializers.CurrentUserDefault(),
         source="created_by",
