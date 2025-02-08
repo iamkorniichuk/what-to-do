@@ -23,15 +23,13 @@ class ActivityViewSet(viewsets.ModelViewSet):
         ]
         return permissions
 
-    def get_queryset(self):
-        queryset = Activity.objects.filter(is_published=True)
-        return queryset
-
     @action(["get"], detail=False)
     def my(self, request):
         current_user = request.user
 
-        queryset = Activity.objects.filter(created_by=current_user).all()
+        queryset = self.get_queryset()
+        queryset = queryset.filter(created_by=current_user).all()
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

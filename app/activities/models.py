@@ -11,7 +11,6 @@ class Activity(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, default="")
     created_by = models.ForeignKey(User, models.CASCADE, related_name="activities")
-    is_published = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return self.name
