@@ -6,5 +6,10 @@ from .models import TicketType
 class TicketTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TicketType
-        fields = ("pk", "name", "description")
+        fields = ("pk", "name", "description", "available_amount")
         read_only_fields = ("pk",)
+
+    available_amount = serializers.SerializerMethodField()
+
+    def get_available_amount(self, obj):
+        return len(obj.available_tickets)
