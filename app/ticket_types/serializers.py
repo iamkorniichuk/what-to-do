@@ -12,4 +12,5 @@ class TicketTypeSerializer(serializers.ModelSerializer):
     available_amount = serializers.SerializerMethodField()
 
     def get_available_amount(self, obj):
-        return len(obj.available_tickets)
+        available_tickets = TicketType.objects.get(pk=obj.pk).available_tickets
+        return len(available_tickets)
