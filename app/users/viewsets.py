@@ -6,7 +6,6 @@ from .serializers import UserSerializer
 
 
 class UserViewSet(
-    mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
