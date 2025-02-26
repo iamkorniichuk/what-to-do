@@ -30,6 +30,8 @@ class ActivitySerializer(serializers.ModelSerializer):
             "created_by_pk",
             "media",
             "files",
+            "location",
+            "is_remote",
         )
         read_only_fields = ("pk", "created_by")
 
@@ -41,6 +43,10 @@ class ActivitySerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault(),
         source="created_by",
     )
+    is_remote = serializers.SerializerMethodField()
+
+    def get_is_remote(self, obj):
+        return obj.location is None
 
     def validate_files(self, files):
         for file in files:

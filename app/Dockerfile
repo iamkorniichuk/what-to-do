@@ -9,6 +9,9 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update
+RUN apt-get install -y binutils libproj-dev gdal-bin
+
 RUN sed -i 's/\r$//g' ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 

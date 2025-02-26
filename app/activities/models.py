@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 
 from commons.validators import ContentTypeValidator, FileSizeValidator
@@ -11,6 +11,7 @@ class Activity(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, default="")
     created_by = models.ForeignKey(User, models.CASCADE, related_name="activities")
+    location = models.PointField(srid=4326, null=True, blank=True)
 
     def __str__(self):
         return self.name

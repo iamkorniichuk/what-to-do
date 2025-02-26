@@ -5,18 +5,21 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "django.contrib.gis",
 ]
 THIRD_PARTY_APPS = [
     "corsheaders",
-    "rest_framework",
-    "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
+    "rest_framework",
+    "rest_framework_gis",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 PROJECT_APPS = [
     "activities",
     "authentication",
-    "interactions",
+    "commons",
     "contacts",
+    "interactions",
     "ticket_scans",
     "ticket_types",
     "tickets",
