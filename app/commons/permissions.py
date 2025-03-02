@@ -20,6 +20,6 @@ class IsRelatedToUser(BasePermission):
 
 class IsRelatedToUserOrReadOnly(IsRelatedToUser):
     def has_object_permission(self, request, view, obj):
-        return request.method in SAFE_METHODS or super().has_object_permission(
-            request, view, obj
-        )
+        if request.method in SAFE_METHODS:
+            return True
+        return super().has_object_permission(request, view, obj)
