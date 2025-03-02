@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 
@@ -11,3 +12,8 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ("pk", "username", "password")
         read_only_fields = ("pk",)
         extra_kwargs = {"password": {"write_only": True}}
+
+    def validate_password(self, value):
+        user = self.instance
+        validate_password(value, user)
+        return value
