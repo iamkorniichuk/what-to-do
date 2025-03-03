@@ -18,6 +18,7 @@ PROJECT_APPS = [
     "activities",
     "authentication",
     "commons",
+    "configurations",
     "contacts",
     "interactions",
     "ticket_scans",

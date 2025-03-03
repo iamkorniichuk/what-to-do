@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from commons.permissions import IsRelatedToUserOrReadOnly
+from configurations.permissions import HasFilledConfiguration
 
 from .models import Activity
 from .serializers import ActivitySerializer
@@ -15,7 +16,8 @@ class ActivityViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permissions = super().get_permissions() + [
-            IsRelatedToUserOrReadOnly("created_by")
+            IsRelatedToUserOrReadOnly("created_by"),
+            HasFilledConfiguration(),
         ]
         return permissions
 
