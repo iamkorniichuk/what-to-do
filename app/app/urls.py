@@ -25,8 +25,5 @@ urlpatterns = [
     path("auth/", include("authentication.urls")),
     path("configurations/", include("configurations.urls")),
     path("interactions/", include("interactions.urls")),
-    path("tickets/", include("tickets.urls")),
-    path("ticket_types/", include("ticket_types.urls")),
-    path("ticket_scans/", include("ticket_scans.urls")),
     path("users/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

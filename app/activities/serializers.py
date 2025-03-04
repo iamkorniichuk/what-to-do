@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from users.serializers import UserSerializer
-from ticket_types.serializers import TicketTypeSerializer
 
 from .models import Activity, ActivityMedia
 
@@ -25,7 +24,6 @@ class ActivitySerializer(serializers.ModelSerializer):
             "pk",
             "name",
             "description",
-            "ticket_types",
             "created_by",
             "created_by_pk",
             "media",
@@ -37,7 +35,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     media = ActivityMediaSerializer(many=True, read_only=True)
     files = serializers.ListField(child=serializers.FileField(), write_only=True)
-    ticket_types = TicketTypeSerializer(many=True, read_only=True)
     created_by = UserSerializer(read_only=True, required=False)
     created_by_pk = serializers.HiddenField(
         default=serializers.CurrentUserDefault(),

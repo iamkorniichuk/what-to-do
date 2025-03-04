@@ -21,9 +21,6 @@ PROJECT_APPS = [
     "configurations",
     "contacts",
     "interactions",
-    "ticket_scans",
-    "ticket_types",
-    "tickets",
     "users",
 ]
 
