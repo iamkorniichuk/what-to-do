@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 
 from commons.validators import ContentTypeValidator, FileSizeValidator
 
+from schedules.models import Schedule
+
 
 User = get_user_model()
 
@@ -38,6 +40,7 @@ class ActivityMedia(models.Model):
     )
     order = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
 
     def __str__(self):
         return f"{self.activity} -> {self.order}"

@@ -4,6 +4,7 @@ djangorestframework-gis==1.1
 djangorestframework-simplejwt==5.3.1
 django-cors-headers==4.4.0
 drf-spectacular==0.28.0
+drf-writable-nested==0.7.1
 environs==11.0.0
 geopy==2.4.1
 gunicorn==22.0.0
