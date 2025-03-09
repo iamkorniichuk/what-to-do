@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from users.serializers import UserSerializer
+from schedules.models import Schedule
+from schedules.serializers import ScheduleSerializer
 
 from .models import Activity, ActivityMedia
 
@@ -29,9 +31,12 @@ class ActivitySerializer(serializers.ModelSerializer):
             "media",
             "files",
             "location",
+            "schedule",
+            "schedule_pk",
+            "duration",
             "is_remote",
         )
-        read_only_fields = ("pk", "created_by")
+        read_only_fields = ("pk", "created_by", "schedule")
 
     media = ActivityMediaSerializer(many=True, read_only=True)
     files = serializers.ListField(child=serializers.FileField(), write_only=True)
@@ -39,6 +44,11 @@ class ActivitySerializer(serializers.ModelSerializer):
     created_by_pk = serializers.HiddenField(
         default=serializers.CurrentUserDefault(),
         source="created_by",
+    )
+    schedule = ScheduleSerializer(read_only=True, required=False)
+    schedule_pk = serializers.PrimaryKeyRelatedField(
+        queryset=Schedule.objects.all(),
+        source="schedule",
     )
     is_remote = serializers.SerializerMethodField()
 

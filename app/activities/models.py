@@ -14,6 +14,8 @@ class Activity(models.Model):
     description = models.TextField(blank=True, default="")
     created_by = models.ForeignKey(User, models.CASCADE, related_name="activities")
     location = models.PointField(srid=4326, null=True, blank=True)
+    schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
+    duration = models.DurationField()
 
     def __str__(self):
         return self.name
@@ -40,7 +42,6 @@ class ActivityMedia(models.Model):
     )
     order = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
 
     def __str__(self):
         return f"{self.activity} -> {self.order}"
