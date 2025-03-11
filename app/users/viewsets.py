@@ -1,8 +1,7 @@
 from rest_framework import viewsets, mixins, parsers
 from rest_framework.decorators import action
 
-from .models import User
-from .serializers import UserSerializer
+from .serializers import User, UserSerializer
 
 
 class UserViewSet(

@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from users.serializers import UserSerializer
-from schedules.models import Schedule
-from schedules.serializers import ScheduleSerializer
+from schedules.serializers import Schedule, ScheduleSerializer
 
 from .models import Activity, ActivityMedia
 

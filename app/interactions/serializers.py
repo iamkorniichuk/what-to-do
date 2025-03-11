@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from activities.models import Activity
-from activities.serializers import ActivitySerializer
+from activities.serializers import Activity, ActivitySerializer
 from users.serializers import UserSerializer
 
 from .models import Interaction

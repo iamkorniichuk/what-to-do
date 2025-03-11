@@ -1,8 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 
-from .models import Configuration
-from .serializers import ConfigurationSerializer
+from .serializers import Configuration, ConfigurationSerializer
 
 
 class ConfigurationViewSet(

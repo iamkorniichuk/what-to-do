@@ -4,8 +4,7 @@ from rest_framework.response import Response
 
 from commons.permissions import IsRelatedToUser
 
-from .models import Interaction
-from .serializers import InteractionSerializer
+from .serializers import Interaction, InteractionSerializer
 
 
 class InteractionViewSet(

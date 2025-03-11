@@ -4,8 +4,7 @@ from rest_framework.response import Response
 
 from commons.permissions import IsRelatedToUserOrReadOnly
 
-from .models import Schedule
-from .serializers import ScheduleSerializer
+from .serializers import Schedule, ScheduleSerializer
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):

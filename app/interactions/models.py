@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 from activities.models import Activity
 
@@ -22,11 +21,7 @@ class Interaction(models.Model):
     type = models.PositiveSmallIntegerField(choices=TypeChoices.choices)
     activity = models.ForeignKey(Activity, models.CASCADE, related_name="interactions")
     created_by = models.ForeignKey(User, models.CASCADE, related_name="interactions")
-    created_at = models.DateTimeField(blank=True, editable=False)
-
-    def save(self, *args, **kwargs):
-        self.created_at = timezone.now()
-        return super().save(*args, **kwargs)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.get_type_display()}: {self.created_by} -> {self.activity}"
