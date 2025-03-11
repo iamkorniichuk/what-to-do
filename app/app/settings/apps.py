@@ -17,6 +17,7 @@ THIRD_PARTY_APPS = [
 PROJECT_APPS = [
     "activities",
     "authentication",
+    "bookings",
     "commons",
     "configurations",
     "contacts",
