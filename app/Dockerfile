@@ -31,6 +31,12 @@ COPY . .
 RUN sed -i 's/\r$//g' ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
+RUN mkdir -p /var/www/media /var/www/static && \
+    chown -R app_user:app_user /var/www/media /var/www/static && \
+    chmod -R 700 /var/www/media /var/www/static && \
+    chmod -R g+s /var/www/media /var/www/static
+
+
 USER app_user
 
 ENTRYPOINT ["./entrypoint.sh"]
