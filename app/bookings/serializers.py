@@ -33,3 +33,31 @@ class BookingSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault(),
         source="booked_by",
     )
+
+    def validate(self, fields):
+        activity = fields["activity"]
+        schedule = activity.schedule
+        appointment = fields["appointment_datetime"]
+
+        weekday = appointment.weekday()
+        time = appointment.time()
+
+        is_valid = (
+            schedule.work_days.filter(
+                day=weekday,
+                work_hours__start__lte=time,
+                work_hours__end__gte=time,
+            )
+            .exclude(
+                break_hours__start__lte=time,
+                break_hours__end__gte=time,
+            )
+            .exists()
+        )
+
+        if not is_valid:
+            raise serializers.ValidationError(
+                {"appointment_datetime": "Datetime is not valid for this schedule"}
+            )
+
+        return fields

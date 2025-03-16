@@ -15,13 +15,13 @@ class TimeRange(models.Model):
 
 class WorkDay(models.Model):
     class WeekDayChoices(models.IntegerChoices):
-        MONDAY = 1, "monday"
-        TUESDAY = 2, "tuesday"
-        WEDNESDAY = 3, "wednesday"
-        THURSDAY = 4, "thursday"
-        FRIDAY = 5, "friday"
-        SATURDAY = 6, "saturday"
-        SUNDAY = 7, "sunday"
+        MONDAY = 0, "monday"
+        TUESDAY = 1, "tuesday"
+        WEDNESDAY = 2, "wednesday"
+        THURSDAY = 3, "thursday"
+        FRIDAY = 4, "friday"
+        SATURDAY = 5, "saturday"
+        SUNDAY = 6, "sunday"
 
     day = models.PositiveSmallIntegerField(choices=WeekDayChoices.choices)
     work_hours = models.ForeignKey(
