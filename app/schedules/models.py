@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.timezone import timedelta
 
 
 User = get_user_model()
@@ -44,6 +45,7 @@ class Schedule(models.Model):
         WorkDay,
         related_name="schedules",
     )
+    booking_duration = models.DurationField(default=timedelta(hours=1))
     created_by = models.ForeignKey(User, models.CASCADE)
 
     def __str__(self):

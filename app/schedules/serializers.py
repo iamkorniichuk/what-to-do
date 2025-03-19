@@ -29,6 +29,7 @@ class ScheduleSerializer(WritableNestedModelSerializer):
         fields = (
             "pk",
             "work_days",
+            "booking_duration",
             "created_by",
             "created_by_pk",
         )
