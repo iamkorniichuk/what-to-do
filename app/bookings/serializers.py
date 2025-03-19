@@ -1,3 +1,4 @@
+from django.db.models import Q, F, ExpressionWrapper, DateTimeField
 from rest_framework import serializers
 
 from activities.serializers import ActivitySerializer, Activity
@@ -35,14 +36,29 @@ class BookingSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, fields):
+        if not self.is_appointment_datetime_in_work_hours(fields):
+            raise serializers.ValidationError(
+                {
+                    "appointment_datetime": "The appointment time is outside of working hours"
+                }
+            )
+
+        if not self.is_appointment_datetime_free(fields):
+            raise serializers.ValidationError(
+                {"appointment_datetime": "The appointment time is already booked"}
+            )
+
+        return fields
+
+    def is_appointment_datetime_in_work_hours(self, fields):
         activity = fields["activity"]
         schedule = activity.schedule
-        appointment = fields["appointment_datetime"]
+        appointment_start = fields["appointment_datetime"]
 
-        weekday = appointment.weekday()
-        time = appointment.time()
+        weekday = appointment_start.weekday()
+        time = appointment_start.time()
 
-        is_valid = (
+        is_in_work_hours = (
             schedule.work_days.filter(
                 day=weekday,
                 work_hours__start__lte=time,
@@ -54,10 +70,39 @@ class BookingSerializer(serializers.ModelSerializer):
             )
             .exists()
         )
+        return is_in_work_hours
 
-        if not is_valid:
-            raise serializers.ValidationError(
-                {"appointment_datetime": "Datetime is not valid for this schedule"}
+    def is_appointment_datetime_free(self, fields):
+        booking_duration = fields["schedule"].booking_duration
+        appointment_start = fields["appointment_datetime"]
+        appointment_end = fields["appointment_datetime"] + booking_duration
+        bookings = fields["activity"].bookings.annotate(
+            appointment_datetime_end=ExpressionWrapper(
+                F("appointment_datetime") + booking_duration,
+                output_field=DateTimeField(),
             )
+        )
 
-        return fields
+        overlapping_bookings = bookings.filter(
+            Q(
+                appointment_datetime__lt=appointment_end,
+                appointment_datetime__gte=appointment_start,
+            )
+            | Q(
+                appointment_datetime__lte=appointment_start,
+                appointment_datetime_end__gt=appointment_start,
+            )
+            | Q(
+                appointment_datetime__gte=appointment_start,
+                appointment_datetime__lt=appointment_end,
+            )
+            | Q(
+                appointment_datetime__lt=appointment_start,
+                appointment_datetime_end__gt=appointment_end,
+            )
+        )
+
+        if self.instance:
+            overlapping_bookings = overlapping_bookings.exclude(id=self.instance.id)
+
+        return not overlapping_bookings.exists()
