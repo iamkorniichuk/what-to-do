@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "app.settings"
+django_find_project = false
+pythonpath = [".", "app"]
+python_files = ["test_*.py", "tests.py"]
