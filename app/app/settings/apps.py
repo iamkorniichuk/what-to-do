@@ -11,6 +11,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "rest_framework",
+    "django_filters",
     "rest_framework_gis",
     "rest_framework_simplejwt.token_blacklist",
 ]
