@@ -13,7 +13,9 @@ services:
         condition: service_healthy
 
   db:
-    image: postgis/postgis:latest
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     ports:
       - 5432:5432
     volumes:

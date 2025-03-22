@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
+from pgvector.django import VectorField
 
 from commons.validators import ContentTypeValidator, FileSizeValidator
 
@@ -11,11 +12,12 @@ User = get_user_model()
 
 class Activity(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(blank=True, default="")
+    description = models.TextField()
     created_by = models.ForeignKey(User, models.CASCADE, related_name="activities")
     location = models.PointField(srid=4326, null=True, blank=True)
     schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
     duration = models.DurationField()
+    embedding = VectorField()
 
     def __str__(self):
         return self.name
