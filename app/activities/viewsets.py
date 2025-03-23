@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from django_filters import rest_framework as filters
 
 from commons.permissions import IsRelatedToUserOrReadOnly
-from configurations.permissions import HasFilledConfiguration
 
 from .serializers import ActivitySerializer, Activity
 from .filtersets import ActivityFilterSet
@@ -20,7 +19,6 @@ class ActivityViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         permissions = super().get_permissions() + [
             IsRelatedToUserOrReadOnly("created_by"),
-            HasFilledConfiguration(),
         ]
         return permissions
 

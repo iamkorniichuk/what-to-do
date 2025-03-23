@@ -24,7 +24,6 @@ urlpatterns = [
     path("activities/", include("activities.urls")),
     path("auth/", include("authentication.urls")),
     path("bookings/", include("bookings.urls")),
-    path("configurations/", include("configurations.urls")),
     path("interactions/", include("interactions.urls")),
     path("recommendations/", include("recommendations.urls")),
     path("schedules/", include("schedules.urls")),

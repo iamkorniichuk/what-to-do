@@ -20,7 +20,6 @@ PROJECT_APPS = [
     "authentication",
     "bookings",
     "commons",
-    "configurations",
     "contacts",
     "interactions",
     "recommendations",
