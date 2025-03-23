@@ -23,6 +23,7 @@ PROJECT_APPS = [
     "configurations",
     "contacts",
     "interactions",
+    "recommendations",
     "schedules",
     "users",
 ]
