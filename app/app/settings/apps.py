@@ -24,6 +24,7 @@ PROJECT_APPS = [
     "interactions",
     "recommendations",
     "schedules",
+    "territories",
     "users",
 ]
 
