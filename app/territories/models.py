@@ -16,7 +16,8 @@ class Territory(models.Model):
         COUNTRY = 0, "country"
         REGION = 1, "region"
         DISTRICT = 2, "district"
-        SETTLEMENT = 3, "settlement"
+        COMMUNITY = 3, "community"
+        SETTLEMENT = 4, "settlement"
 
     code = models.CharField(max_length=12, unique=True)
     name = models.CharField(max_length=100)
