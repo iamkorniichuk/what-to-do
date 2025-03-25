@@ -1,7 +1,17 @@
 from django.contrib.gis.db import models
+from django.contrib.postgres.indexes import GinIndex
 
 
 class Territory(models.Model):
+    class Meta:
+        indexes = [
+            GinIndex(
+                name="name_trigram_index",
+                fields=("name",),
+                opclasses=("gin_trgm_ops",),
+            )
+        ]
+
     class TypeChoices(models.IntegerChoices):
         COUNTRY = 0, "country"
         REGION = 1, "region"
