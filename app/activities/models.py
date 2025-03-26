@@ -21,12 +21,27 @@ class ActivityManager(models.Manager):
         return queryset
 
 
+class ActivityTypeChoices(models.IntegerChoices):
+    RECURRING = 0, "recurring"
+    ONE_TIME = 1, "one-time"
+
+
 class Activity(models.Model):
+    class Meta:
+        default_related_name = "activities"
+
+    default_type_choice = None
+
     name = models.CharField(max_length=64)
     description = models.TextField()
-    created_by = models.ForeignKey(User, models.CASCADE, related_name="activities")
+    created_by = models.ForeignKey(User, models.CASCADE)
     location = models.PointField(srid=4326, null=True, blank=True)
-    schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
+    type = models.PositiveSmallIntegerField(
+        editable=False,
+        blank=True,
+        choices=ActivityTypeChoices,
+        default=default_type_choice,
+    )
     duration = models.DurationField()
     embedding = VectorField()
 
@@ -60,3 +75,12 @@ class ActivityMedia(models.Model):
 
     def __str__(self):
         return f"{self.activity} -> {self.order}"
+
+
+class RecurringActivity(Activity):
+    class Meta:
+        default_related_name = "recurring_activities"
+
+    default_type_choice = ActivityTypeChoices.RECURRING
+
+    schedule = models.ForeignKey(Schedule, models.PROTECT)

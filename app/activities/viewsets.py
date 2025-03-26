@@ -5,13 +5,13 @@ from django_filters import rest_framework as filters
 
 from commons.permissions import IsRelatedToUserOrReadOnly
 
-from .serializers import ActivitySerializer, Activity
+from .serializers import PolymorphicActivitySerializer, Activity
 from .filtersets import ActivityFilterSet
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.prefetch_related("media").all()
-    serializer_class = ActivitySerializer
+    serializer_class = PolymorphicActivitySerializer
     parser_classes = [parsers.MultiPartParser, parsers.FormParser]
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ActivityFilterSet

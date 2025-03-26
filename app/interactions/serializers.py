@@ -34,9 +34,10 @@ class InteractionSerializer(serializers.ModelSerializer):
             "created_by",
             "created_by_pk",
             "type",
+            "type_label",
             "created_at",
         )
-        read_only_fields = ("pk", "activity", "created_by", "created_at")
+        read_only_fields = ("pk", "activity", "created_by", "created_at", "type_label")
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Interaction.objects.all(),
@@ -56,3 +57,7 @@ class InteractionSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault(),
         source="created_by",
     )
+    type_label = serializers.SerializerMethodField()
+
+    def get_type_label(self, obj):
+        return obj.get_type_display()
