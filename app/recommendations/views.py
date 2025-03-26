@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.generics import ListAPIView
 
 from activities.serializers import ActivitySerializer, Activity
@@ -8,6 +9,7 @@ from interactions.models import Interaction
 class RecommendationView(ListAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     limit = 40
 

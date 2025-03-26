@@ -13,6 +13,9 @@ class InteractionManager(models.Manager):
     dislike_weight = 0.5
 
     def get_user_embedding(self, user):
+        if user is None:
+            return None
+
         queryset = self.get_queryset().filter(created_by=user)
         queryset = queryset.annotate(
             weighted_embedding=models.Case(
