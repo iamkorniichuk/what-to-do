@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from pgvector.django import VectorField
+from pgvector.django import L2Distance
 
 from commons.validators import ContentTypeValidator, FileSizeValidator
 
@@ -8,6 +9,16 @@ from schedules.models import Schedule
 
 
 User = get_user_model()
+
+
+class ActivityManager(models.Manager):
+    def order_by_embedding_distance(self, embedding):
+        queryset = (
+            self.get_queryset()
+            .alias(distance=L2Distance("embedding", embedding))
+            .order_by("distance")
+        )
+        return queryset
 
 
 class Activity(models.Model):
@@ -18,6 +29,8 @@ class Activity(models.Model):
     schedule = models.ForeignKey(Schedule, models.PROTECT, related_name="activities")
     duration = models.DurationField()
     embedding = VectorField()
+
+    objects = ActivityManager()
 
     def __str__(self):
         return self.name

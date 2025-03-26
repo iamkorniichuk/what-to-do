@@ -1,56 +1,25 @@
-from django.db.models import Avg, F, Value, When, Case, Count, Q
-from django.db.models.functions import Coalesce
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db.models import Count, Q
+from rest_framework.generics import ListAPIView
 
-from pgvector.django import L2Distance
-
-from activities.models import Activity
-from activities.serializers import ActivitySerializer
+from activities.serializers import ActivitySerializer, Activity
 from interactions.models import Interaction
 
 
-class RecommendationsView(APIView):
-    like_type = Interaction.TypeChoices.LIKE
-    dislike_type = Interaction.TypeChoices.DISLIKE
-    like_weight = 1.0
-    dislike_weight = 0.5
+class RecommendationView(ListAPIView):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+
     limit = 40
 
-    def calculate_user_embedding(self, user):
-        user_embedding = (
-            Activity.objects.filter(interactions__created_by=user)
-            .annotate(
-                weighted_embedding=Case(
-                    When(
-                        interactions__type=self.like_type,
-                        then=F("embedding") * self.like_weight,
-                    ),
-                    When(
-                        interactions__type=self.dislike_type,
-                        then=F("embedding") * -self.dislike_weight,
-                    ),
-                )
-            )
-            .aggregate(user_embedding=Coalesce(Avg("weighted_embedding"), Value(None)))[
-                "user_embedding"
-            ]
-        )
-
-        return user_embedding
-
-    def get(self, request):
-        current_user = request.user
-        user_embedding = self.calculate_user_embedding(current_user)
+    def filter_queryset(self, queryset):
+        current_user = self.request.user
+        user_embedding = Interaction.objects.get_user_embedding(current_user)
 
         if user_embedding is None:
-            activities = Activity.objects.annotate(
+            queryset = queryset.annotate(
                 likes=Count("interactions", filter=Q(interactions__type=self.like_type))
-            ).order_by("-likes")[: self.limit]
+            ).order_by("-likes")
         else:
-            activities = Activity.objects.alias(
-                distance=L2Distance("embedding", user_embedding)
-            ).order_by("distance")[: self.limit]
+            queryset = queryset.order_by_embedding_distance(user_embedding)
 
-        serializer = ActivitySerializer(activities, many=True)
-        return Response(serializer.data)
+        return queryset[: self.limit]

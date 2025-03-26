@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import RecommendationsView
+from .views import RecommendationView
 
 
 app_name = "recommendations"
 
 
 urlpatterns = [
-    path("", RecommendationsView.as_view(), name="recommendation-list"),
+    path("", RecommendationView.as_view(), name="recommendation-list"),
 ]
